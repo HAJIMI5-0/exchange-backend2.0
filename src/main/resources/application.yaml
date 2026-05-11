@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://10.30.4.139:3306/soul?serverTimezone=Asia/Seoul&createDatabaseIfNotExist=true}
+    username: dev
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=100,expireAfterWrite=10m
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+server:
+  port: 8080
+  address: 0.0.0.0
+
