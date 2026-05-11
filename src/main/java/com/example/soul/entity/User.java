@@ -23,6 +23,7 @@ public class User {
     private Integer age;
     private String skillOffer;
     private String skillWant;
+    private String nationality;
 
     public User() {
     }
@@ -118,4 +119,8 @@ public class User {
     public void setSkillWant(String skillWant) {
         this.skillWant = skillWant;
     }
+
+    public String getNationality() {return nationality;}
+
+    public void setNationality(String nationality) {this.nationality = nationality;}
 }

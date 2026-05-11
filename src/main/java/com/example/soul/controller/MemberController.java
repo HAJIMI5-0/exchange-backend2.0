@@ -50,6 +50,7 @@ public class MemberController {
         user.setAge(parseNullableInt(request.getAge()));
         user.setSkillOffer(trimToNull(request.getTeachSkill()));
         user.setSkillWant(trimToNull(request.getLearnSkill()));
+        user.setNationality(trimToNull(request.getNationality()));
 
         User saved = userRepository.save(user);
         return ResponseEntity.ok(toMember(saved));
@@ -66,7 +67,8 @@ public class MemberController {
                 user.getGender(),
                 user.getAge(),
                 user.getSkillOffer(),
-                user.getSkillWant()
+                user.getSkillWant(),
+                user.getNationality()
         );
     }
 

@@ -11,6 +11,7 @@ public class ProfileUpdateRequest {
     private String age;
     private String teachSkill;
     private String learnSkill;
+    private String nationality;
 
     public String getUsername() {
         return username;
@@ -83,4 +84,6 @@ public class ProfileUpdateRequest {
     public void setLearnSkill(String learnSkill) {
         this.learnSkill = learnSkill;
     }
+    public String getNationality() {return nationality;}
+    public void setNationality(String nationality) {this.nationality = nationality;}
 }

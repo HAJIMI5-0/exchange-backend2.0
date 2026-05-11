@@ -12,6 +12,8 @@ public class ProfileResponse {
     private String teachSkill;
     private String learnSkill;
 
+    private String nationality;
+
     public ProfileResponse() {
     }
 
@@ -24,6 +26,7 @@ public class ProfileResponse {
             String gender,
             Integer age,
             String teachSkill,
+            String nationality,
             String learnSkill
     ) {
         this.username = username;
@@ -35,6 +38,8 @@ public class ProfileResponse {
         this.age = age;
         this.teachSkill = teachSkill;
         this.learnSkill = learnSkill;
+        this.nationality = nationality;
+
     }
 
     public String getUsername() {
@@ -108,5 +113,7 @@ public class ProfileResponse {
     public void setLearnSkill(String learnSkill) {
         this.learnSkill = learnSkill;
     }
+    public String getNationality() {return nationality;}
+    public void setNationality(String nationality) {this.nationality = nationality;}
 }
 

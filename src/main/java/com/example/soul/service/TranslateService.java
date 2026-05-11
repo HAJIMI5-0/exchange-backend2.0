@@ -57,7 +57,7 @@ public class TranslateService {
 
         String url = "http://localhost:11434/api/generate";
 
-        // 🔥 强化 Prompt
+        //  强化 Prompt
         String prompt =
                 "You are a professional translator.\n" +
                         "Translate the following text into " + targetLang + ".\n" +
@@ -99,11 +99,11 @@ public class TranslateService {
 
             translate("你好", "English");
 
-            System.out.println("✅ translategemma:12b 已预热");
+            System.out.println("translategemma:12b 已预热");
 
         } catch (Exception e) {
 
-            System.out.println("⚠️ 模型预热失败");
+            System.out.println("模型预热失败");
         }
     }
 }

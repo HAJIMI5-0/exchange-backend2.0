@@ -12,6 +12,7 @@ public class MemberProfileResponse {
     private Integer age;
     private String teachSkill;
     private String learnSkill;
+    private String nationality;
 
     public MemberProfileResponse() {
     }
@@ -26,7 +27,8 @@ public class MemberProfileResponse {
             String gender,
             Integer age,
             String teachSkill,
-            String learnSkill
+            String learnSkill,
+            String nationality
     ) {
         this.id = id;
         this.username = username;
@@ -38,6 +40,7 @@ public class MemberProfileResponse {
         this.age = age;
         this.teachSkill = teachSkill;
         this.learnSkill = learnSkill;
+        this.nationality = nationality;
     }
 
     public Long getId() {
@@ -119,5 +122,7 @@ public class MemberProfileResponse {
     public void setLearnSkill(String learnSkill) {
         this.learnSkill = learnSkill;
     }
+    public String getNationality() {return nationality;}
+    public void setNationality(String nationality) {this.nationality = nationality;}
 }
 

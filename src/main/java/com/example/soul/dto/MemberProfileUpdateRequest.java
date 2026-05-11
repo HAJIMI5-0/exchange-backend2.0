@@ -10,6 +10,7 @@ public class MemberProfileUpdateRequest {
     private String age;
     private String teachSkill;
     private String learnSkill;
+    private String nationality;
 
     public String getPhone() {
         return phone;
@@ -74,5 +75,7 @@ public class MemberProfileUpdateRequest {
     public void setLearnSkill(String learnSkill) {
         this.learnSkill = learnSkill;
     }
+    public String getNationality() {return nationality;}
+    public void setNationality(String nationality) {this.nationality = nationality;}
 }
 

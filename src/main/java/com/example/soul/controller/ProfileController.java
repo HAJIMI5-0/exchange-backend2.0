@@ -67,6 +67,7 @@ public class ProfileController {
         user.setAvatar(trimToNull(request.getAvatar()));
         user.setGender(trimToNull(request.getGender()));
         user.setAge(parseNullableInt(request.getAge()));
+        user.setNationality(trimToNull(request.getNationality()));
 
         // Frontend uses teachSkill/learnSkill; backend entity stores them as skillOffer/skillWant.
         user.setSkillOffer(trimToNull(request.getTeachSkill()));
@@ -86,6 +87,7 @@ public class ProfileController {
                 user.getGender(),
                 user.getAge(),
                 user.getSkillOffer(),
+                user.getNationality(),
                 user.getSkillWant()
         );
     }
