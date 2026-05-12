@@ -6,29 +6,29 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-@Entity
-@Table(name = "chat_message")
+@Entity // 实体类，对应数据库表
+@Table(name = "chat_message") // 表名：chat_message
 public class ChatMessage {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // 主键
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 自动增长
     private Long id;
 
-    @Column(name = "sender_username", nullable = false)
+    @Column(name = "sender_username", nullable = false) // 发送者
     private String senderUsername;
 
-    @Column(name = "receiver_username", nullable = false)
+    @Column(name = "receiver_username", nullable = false) // 接收者
     private String receiverUsername;
 
-    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "content", columnDefinition = "TEXT", nullable = false) // 消息内容
     private String content;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at") // 创建时间
     private LocalDateTime createdAt;
 
-    @PrePersist
+    @PrePersist // 保存前自动执行
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now(); // 设置当前时间
     }
 
     public ChatMessage() {

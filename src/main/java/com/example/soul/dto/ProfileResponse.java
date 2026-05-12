@@ -3,6 +3,7 @@ package com.example.soul.dto;
 public class ProfileResponse {
 
     private String username;
+    private String name;
     private String phone;
     private String email;
     private String address;
@@ -11,7 +12,6 @@ public class ProfileResponse {
     private Integer age;
     private String teachSkill;
     private String learnSkill;
-
     private String nationality;
 
     public ProfileResponse() {
@@ -19,6 +19,7 @@ public class ProfileResponse {
 
     public ProfileResponse(
             String username,
+            String name,
             String phone,
             String email,
             String address,
@@ -30,6 +31,7 @@ public class ProfileResponse {
             String learnSkill
     ) {
         this.username = username;
+        this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
@@ -39,7 +41,6 @@ public class ProfileResponse {
         this.teachSkill = teachSkill;
         this.learnSkill = learnSkill;
         this.nationality = nationality;
-
     }
 
     public String getUsername() {
@@ -48,6 +49,14 @@ public class ProfileResponse {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhone() {
@@ -113,7 +122,12 @@ public class ProfileResponse {
     public void setLearnSkill(String learnSkill) {
         this.learnSkill = learnSkill;
     }
-    public String getNationality() {return nationality;}
-    public void setNationality(String nationality) {this.nationality = nationality;}
-}
 
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+}

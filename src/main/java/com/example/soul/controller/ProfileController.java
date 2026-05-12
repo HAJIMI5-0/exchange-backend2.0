@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 /**
  * 用户个人资料接口
  * 提供用户信息查询与修改功能
@@ -22,45 +23,52 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class ProfileController {
-    //用户资料接口
-    //查询
+
     private final UserRepository userRepository;
 
     public ProfileController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-
     /**
      * 查询用户个人资料
      *
      * @param username 用户名
-     * @return 用户资料信息（包含基本信息、技能等）
+     * @return 用户资料信息
      */
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(@RequestParam String username) {
         return userRepository.findByUsername(username)
                 .<ResponseEntity<?>>map(user -> ResponseEntity.ok(toProfile(user)))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(message("User not found")));
+                .orElseGet(() ->
+                        ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(message("User not found")));
     }
+
     /**
      * 更新用户个人资料
      *
-     * @param request 前端传入的用户资料（手机号、邮箱、技能等）
+     * @param request 前端传入的用户资料
      * @return 更新后的用户资料
      */
     @PutMapping("/profile")
     public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdateRequest request) {
+
         String username = request.getUsername();
+
         if (username == null || username.trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message("username is required"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(message("username is required"));
         }
 
         User user = userRepository.findByUsername(username.trim()).orElse(null);
+
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message("User not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(message("User not found"));
         }
 
+        user.setName(trimToNull(request.getName()));
         user.setPhone(trimToNull(request.getPhone()));
         user.setEmail(trimToNull(request.getEmail()));
         user.setAddress(trimToNull(request.getAddress()));
@@ -69,17 +77,21 @@ public class ProfileController {
         user.setAge(parseNullableInt(request.getAge()));
         user.setNationality(trimToNull(request.getNationality()));
 
-        // Frontend uses teachSkill/learnSkill; backend entity stores them as skillOffer/skillWant.
+        // Frontend uses teachSkill/learnSkill
+        // backend entity stores them as skillOffer/skillWant
         user.setSkillOffer(trimToNull(request.getTeachSkill()));
         user.setSkillWant(trimToNull(request.getLearnSkill()));
 
         User saved = userRepository.save(user);
+
         return ResponseEntity.ok(toProfile(saved));
     }
 
     private ProfileResponse toProfile(User user) {
+
         return new ProfileResponse(
                 user.getUsername(),
+                user.getName(),
                 user.getPhone(),
                 user.getEmail(),
                 user.getAddress(),
@@ -93,24 +105,32 @@ public class ProfileController {
     }
 
     private Map<String, Object> message(String msg) {
+
         Map<String, Object> res = new LinkedHashMap<>();
         res.put("message", msg);
+
         return res;
     }
 
     private String trimToNull(String value) {
+
         if (value == null) {
             return null;
         }
+
         String trimmed = value.trim();
+
         return trimmed.isEmpty() ? null : trimmed;
     }
 
     private Integer parseNullableInt(String value) {
+
         String trimmed = trimToNull(value);
+
         if (trimmed == null) {
             return null;
         }
+
         try {
             return Integer.parseInt(trimmed);
         } catch (NumberFormatException e) {
