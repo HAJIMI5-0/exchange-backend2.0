@@ -10,6 +10,8 @@ import java.util.Map;
 @RestController
 public class HealthController {
 
+
+    //字如其名 健康检查接口
     @GetMapping("/health")
     public Map<String, Object> health() {
         Map<String, Object> res = new LinkedHashMap<>();

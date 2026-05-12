@@ -11,33 +11,57 @@ import java.util.Map;
 @Service
 public class OllamaService {
 
-    @Value("${ollama.base-url}")
+    @Value("${ollama.base-url:http://localhost:11434}")
     private String ollamaBaseUrl;
 
-    @Value("${ollama.model}")
+    @Value("${ollama.model:gemma4:e4b}")
     private String ollamaModel;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String suggestReply(AiSuggestRequest request) {
+    // 새로 추가：AI 학습 도움 / 지식 설명 기능
+    public String explainKnowledge(AiSuggestRequest request) {
 
-        String userMessage = request.getMessage();
+        String userQuestion = request.getMessage();
+        String chatContext = request.getContext();
 
-        if (userMessage == null || userMessage.trim().isEmpty()) {
-            userMessage = "상대방과 기술 교환 대화를 시작하고 싶습니다.";
+        if (userQuestion == null || userQuestion.trim().isEmpty()) {
+            userQuestion = "최근 채팅 내용에서 사용자가 이해하지 못한 지식 포인트를 찾아서 설명해주세요.";
+        }
+
+        if (chatContext == null || chatContext.trim().isEmpty()) {
+            chatContext = "최근 채팅 내용이 없습니다.";
         }
 
         String prompt = """
-                당신은 SOUL 기술 교환 플랫폼의 채팅 도우미입니다.
-                사용자가 상대방에게 보낼 수 있는 자연스럽고 짧은 한국어 답장을 추천하세요.
-                조건:
-                1. 한 문장 또는 두 문장으로 답하세요.
-                2. 너무 길게 설명하지 마세요.
-                3. 기술 교환, 스터디, 학습 약속과 관련된 자연스러운 말투로 답하세요.
-                4. 따옴표 없이 답장 내용만 출력하세요.
+                당신은 SOUL 기술 교환 플랫폼의 AI 학습 도우미입니다.
 
-                현재 사용자가 입력한 내용:
-                """ + userMessage;
+                두 사용자가 채팅하면서 특정 지식이나 기술 개념을 이해하지 못하고 있습니다.
+                아래 사용자의 질문과 최근 채팅 내용을 바탕으로, 해당 지식 포인트를 쉽게 설명하세요.
+
+                답변 조건:
+                1. 한국어로 답변하세요.
+                2. 초보자도 이해할 수 있게 쉽게 설명하세요.
+                3. 가능하면 간단한 예시를 포함하세요.
+                4. 너무 길게 쓰지 말고 3~5문장으로 설명하세요.
+                5. 답장 추천이 아니라, 지식 설명을 하세요.
+                6. 채팅창에 바로 표시될 AI 답변만 출력하세요.
+                7. "제가 대신 답장해드릴게요" 같은 표현은 쓰지 마세요.
+
+                사용자의 질문:
+                """ + userQuestion + """
+
+                최근 채팅 내용:
+                """ + chatContext;
+
+        return callOllama(
+                prompt,
+                "당신은 기술 교환 플랫폼의 AI 학습 도우미입니다. 사용자가 모르는 개념을 쉽게 설명합니다."
+        );
+    }
+
+    // Ollama 호출 공통 메서드
+    private String callOllama(String prompt, String systemMessage) {
 
         Map<String, Object> body = Map.of(
                 "model", ollamaModel,
@@ -45,7 +69,7 @@ public class OllamaService {
                 "messages", List.of(
                         Map.of(
                                 "role", "system",
-                                "content", "당신은 기술 교환 플랫폼의 친절한 채팅 추천 AI입니다."
+                                "content", systemMessage
                         ),
                         Map.of(
                                 "role", "user",
@@ -61,7 +85,7 @@ public class OllamaService {
         );
 
         if (response == null || response.get("message") == null) {
-            return "같이 스터디를 진행해보면 좋을 것 같아요!";
+            return "AI가 답변을 생성하지 못했습니다. 다시 질문해 주세요.";
         }
 
         Map message = (Map) response.get("message");
@@ -69,7 +93,7 @@ public class OllamaService {
         Object content = message.get("content");
 
         if (content == null) {
-            return "같이 스터디를 진행해보면 좋을 것 같아요!";
+            return "AI가 답변을 생성하지 못했습니다. 다시 질문해 주세요.";
         }
 
         return content.toString().trim();

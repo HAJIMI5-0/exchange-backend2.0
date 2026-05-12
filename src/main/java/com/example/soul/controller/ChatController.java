@@ -39,6 +39,76 @@ public class ChatController {
     }
 
     // =========================
+    // 创建或获取两个人之间的聊天室
+    // =========================
+    @PostMapping("/direct")
+    public Map<String, Object> createDirectChatRoom(@RequestBody ChatSendRequest request) {
+        Map<String, Object> result = new HashMap<>();
+
+        if (request.getSenderUsername() == null || request.getSenderUsername().trim().isEmpty()) {
+            result.put("success", false);
+            result.put("message", "senderUsername이 비어 있습니다.");
+            return result;
+        }
+
+        if (request.getReceiverUsername() == null || request.getReceiverUsername().trim().isEmpty()) {
+            result.put("success", false);
+            result.put("message", "receiverUsername이 비어 있습니다.");
+            return result;
+        }
+
+        if (request.getSenderUsername().equals(request.getReceiverUsername())) {
+            result.put("success", false);
+            result.put("message", "자기 자신과 채팅방을 만들 수 없습니다.");
+            return result;
+        }
+
+        try {
+            var sender = userRepository.findByUsername(request.getSenderUsername());
+            var receiver = userRepository.findByUsername(request.getReceiverUsername());
+
+            if (sender.isEmpty() || receiver.isEmpty()) {
+                result.put("success", false);
+                result.put("message", "사용자를 찾을 수 없습니다.");
+                return result;
+            }
+
+            Long senderId = sender.get().getId();
+            Long receiverId = receiver.get().getId();
+
+            var room = chatRoomRepository.findRoomBetweenUsers(senderId, receiverId);
+
+            if (room.isPresent()) {
+                result.put("success", true);
+                result.put("roomId", room.get().getId());
+                result.put("message", "이미 존재하는 채팅방입니다.");
+                return result;
+            }
+
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoom.setUser1Id(senderId);
+            chatRoom.setUser2Id(receiverId);
+            chatRoom.setLastMessage("");
+            chatRoom.setLastSenderType("SYSTEM");
+            chatRoom.setLastTime(LocalDateTime.now());
+
+            ChatRoom savedRoom = chatRoomRepository.save(chatRoom);
+
+            result.put("success", true);
+            result.put("roomId", savedRoom.getId());
+            result.put("message", "채팅방이 생성되었습니다.");
+
+            return result;
+
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "채팅방 생성 실패");
+            result.put("error", e.getMessage());
+            return result;
+        }
+    }
+
+    // =========================
     // 发送消息（只有匹配成功用户可发送）
     // =========================
     @PostMapping("/send")
@@ -187,23 +257,23 @@ public class ChatController {
     }
 
     // =========================
-    // AI 回复建议
+    // AI 学习帮助：解释聊天中的知识点
     // =========================
-    @PostMapping("/ai-suggest")
-    public Map<String, Object> aiSuggest(@RequestBody AiSuggestRequest request) {
+    @PostMapping("/ai-help")
+    public Map<String, Object> aiHelp(@RequestBody AiSuggestRequest request) {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            String suggestion = ollamaService.suggestReply(request);
+            String answer = ollamaService.explainKnowledge(request);
 
             result.put("success", true);
-            result.put("suggestion", suggestion);
+            result.put("answer", answer);
 
             return result;
 
         } catch (Exception e) {
             result.put("success", false);
-            result.put("message", "AI 추천 생성 실패");
+            result.put("message", "AI 학습 도움 생성 실패");
             result.put("error", e.getMessage());
 
             return result;

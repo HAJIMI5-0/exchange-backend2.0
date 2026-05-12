@@ -103,7 +103,7 @@ public class ProfileController {
                 user.getSkillWant()
         );
     }
-
+//返回错误信息
     private Map<String, Object> message(String msg) {
 
         Map<String, Object> res = new LinkedHashMap<>();
@@ -112,6 +112,7 @@ public class ProfileController {
         return res;
     }
 
+    //清理数据库空格字符串
     private String trimToNull(String value) {
 
         if (value == null) {
@@ -123,6 +124,7 @@ public class ProfileController {
         return trimmed.isEmpty() ? null : trimmed;
     }
 
+    //字符串年龄转换成数字
     private Integer parseNullableInt(String value) {
 
         String trimmed = trimToNull(value);
