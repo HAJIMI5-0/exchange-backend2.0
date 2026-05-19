@@ -53,6 +53,14 @@ public class MatchQueryController {
             // 我想学的技能
             @RequestParam(required = false) String wantSkill,
 
+            // 学习时间段
+            // 학습 가능 시간대
+            @RequestParam(required = false) String timeSlot,
+
+            // 想学习的等级
+            // 배우고 싶은 기술 레벨
+            @RequestParam(required = false) String learnLevel,
+
             // 반환 인원 수
             // 返回人数
             @RequestParam(defaultValue = "5") int limit
@@ -62,6 +70,8 @@ public class MatchQueryController {
         // 去除字符串空格
         String have = normalize(haveSkill);
         String want = normalize(wantSkill);
+        String time = normalize(timeSlot);
+        String level = normalize(learnLevel);
 
         // 전체 사용자 조회
         // 查询全部用户
@@ -82,7 +92,7 @@ public class MatchQueryController {
             if (have != null) {
 
                 ok = ok && containsSkill(
-                        u.getSkillWant(),
+                        u.getSkillOffer(),
                         have
                 );
             }
@@ -92,8 +102,26 @@ public class MatchQueryController {
             if (want != null) {
 
                 ok = ok && containsSkill(
-                        u.getSkillOffer(),
+                        u.getSkillWant(),
                         want
+                );
+            }
+
+            // 学习时间段匹配
+            // 学습 시간대 매칭
+            if (time != null) {
+
+                ok = ok && time.equalsIgnoreCase(
+                        normalize(u.getTimeSlot())
+                );
+            }
+
+            // 学习等级匹配
+            // 학습 레벨 매칭
+            if (level != null) {
+
+                ok = ok && level.equalsIgnoreCase(
+                        normalize(u.getSkillWantLevel())
                 );
             }
 
@@ -166,7 +194,9 @@ public class MatchQueryController {
                 u.getNationality(),
                 u.getAvatar(),
                 skills,
-                wants
+                wants,
+                u.getTimeSlot(),
+                u.getSkillWantLevel()
         );
     }
 

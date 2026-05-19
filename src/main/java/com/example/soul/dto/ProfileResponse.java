@@ -48,6 +48,18 @@ public class ProfileResponse {
     // 국적
     private String nationality;
 
+    // 学习时间段
+    // 학습 가능 시간대
+    private String timeSlot;
+
+    // 项目 / 奖项 / 证书
+    // 프로젝트 / 수상 / 자격증
+    private String projectAwards;
+
+    // 想学习的等级
+    // 배우고 싶은 레벨
+    private String learnLevel;
+
     // ===== 默认构造函数 =====
     // 기본 생성자
     public ProfileResponse() {
@@ -66,7 +78,10 @@ public class ProfileResponse {
             Integer age,
             String teachSkill,
             String nationality,
-            String learnSkill
+            String learnSkill,
+            String timeSlot,
+            String projectAwards,
+            String learnLevel
     ) {
         this.username = username;
         this.name = name;
@@ -77,8 +92,11 @@ public class ProfileResponse {
         this.gender = gender;
         this.age = age;
         this.teachSkill = teachSkill;
-        this.learnSkill = learnSkill;
         this.nationality = nationality;
+        this.learnSkill = learnSkill;
+        this.timeSlot = timeSlot;
+        this.projectAwards = projectAwards;
+        this.learnLevel = learnLevel;
     }
 
     // ===== Getter / Setter =====
@@ -169,5 +187,29 @@ public class ProfileResponse {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public String getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    public String getProjectAwards() {
+        return projectAwards;
+    }
+
+    public void setProjectAwards(String projectAwards) {
+        this.projectAwards = projectAwards;
+    }
+
+    public String getLearnLevel() {
+        return learnLevel;
+    }
+
+    public void setLearnLevel(String learnLevel) {
+        this.learnLevel = learnLevel;
     }
 }

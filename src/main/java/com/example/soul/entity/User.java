@@ -9,27 +9,58 @@ import jakarta.persistence.Id;
 @Entity
 public class User {
 
+    // 用户ID（主键）
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 用户账号
     private String username;
+
+    // 用户密码
     private String password;
+
+    // 手机号
     private String phone;
+
+    // 昵称 / 姓名
     private String name;
+
+    // 邮箱
     private String email;
+
+    // 地址
     private String address;
+
+    // 用户头像
     private String avatar;
+
+    // 性别
     private String gender;
+
+    // 年龄
     private Integer age;
 
+    // 擅长技能
     private String skillOffer;
+
+    // 想学习技能
     private String skillWant;
 
+    // 国籍
     private String nationality;
 
+    // 学习时间段
+    // 例如：weekday_morning
+    private String timeSlot;
 
-    // 新增字段
+    // 学习等级
+    // beginner / intermediate / advanced
+    private String learnLevel;
+
+    // 项目 / 奖项 / 证书
+    @Column(columnDefinition = "TEXT")
+    private String projectAwards;
 
     // 擅长技能等级
     private String skillOfferLevel;
@@ -54,7 +85,7 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String awardDetail;
 
-    // 主题模式（light / dark）
+    // 主题模式
     private String themeMode;
 
     // 背景风格
@@ -66,11 +97,14 @@ public class User {
     public User() {
     }
 
+    // =========================
+    // Getter / Setter
+    // =========================
+
     public Long getId() {
         return id;
     }
 
-    // 读取 修改数据
     public String getUsername() {
         return username;
     }
@@ -165,6 +199,32 @@ public class User {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    // 学习时间段
+    public String getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    // 学习等级
+    public String getLearnLevel() {
+        return learnLevel;
+    }
+
+    public void setLearnLevel(String learnLevel) {
+        this.learnLevel = learnLevel;
+    }
+
+    public String getProjectAwards() {
+        return projectAwards;
+    }
+
+    public void setProjectAwards(String projectAwards) {
+        this.projectAwards = projectAwards;
     }
 
     public String getSkillOfferLevel() {

@@ -48,6 +48,18 @@ public class ProfileUpdateRequest {
     // 국적
     private String nationality;
 
+    // 学习时间段
+    // 학습 가능 시간대
+    private String timeSlot;
+
+    // 想学习的等级
+    // 배우고 싶은 기술 레벨
+    private String learnLevel;
+
+    // 项目 / 奖项 / 证书
+    // 프로젝트 / 수상 / 자격증
+    private String projectAwards;
+
     // ===== Getter / Setter =====
 
     public String getUsername() {
@@ -136,5 +148,29 @@ public class ProfileUpdateRequest {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public String getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    public String getLearnLevel() {
+        return learnLevel;
+    }
+
+    public void setLearnLevel(String learnLevel) {
+        this.learnLevel = learnLevel;
+    }
+
+    public String getProjectAwards() {
+        return projectAwards;
+    }
+
+    public void setProjectAwards(String projectAwards) {
+        this.projectAwards = projectAwards;
     }
 }
