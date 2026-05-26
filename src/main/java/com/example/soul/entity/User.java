@@ -20,6 +20,10 @@ public class User {
     // 用户密码
     private String password;
 
+    // 用户权限
+    // USER / ADMIN
+    private String role;
+
     // 手机号
     private String phone;
 
@@ -121,6 +125,22 @@ public class User {
         this.password = password;
     }
 
+    // =========================
+    // 用户权限
+    // =========================
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    // =========================
+    // 基本信息
+    // =========================
+
     public String getPhone() {
         return phone;
     }
@@ -176,6 +196,10 @@ public class User {
     public void setAge(Integer age) {
         this.age = age;
     }
+
+    // =========================
+    // 技能信息
+    // =========================
 
     public String getSkillOffer() {
         return skillOffer;
@@ -251,6 +275,10 @@ public class User {
         this.availableTime = availableTime;
     }
 
+    // =========================
+    // 项目 / 奖项
+    // =========================
+
     public Boolean getHasProject() {
         return hasProject;
     }
@@ -282,6 +310,10 @@ public class User {
     public void setAwardDetail(String awardDetail) {
         this.awardDetail = awardDetail;
     }
+
+    // =========================
+    // UI 设置
+    // =========================
 
     public String getThemeMode() {
         return themeMode;
