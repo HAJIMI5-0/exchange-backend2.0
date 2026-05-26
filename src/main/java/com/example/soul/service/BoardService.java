@@ -83,11 +83,32 @@ public class BoardService {
     // =========================
     // 게시글 삭제
     // 删除帖子
+    // 작성자 이름이 일치해야 삭제 가능
+    // 作者名字一致时才允许删除
     // =========================
-    public void deleteBoard(Long id) {
+    public void deleteBoard(Long id, String author) {
+
+        // 게시글 조회
+        // 查询帖子
+        Board board = boardRepository.findById(id)
+                .orElse(null);
+
+        // 게시글이 없을 경우
+        // 如果帖子不存在
+        if (board == null) {
+
+            throw new RuntimeException("게시글 없음");
+        }
+
+        // 작성자 비교
+        // 比较作者名字
+        if (!board.getAuthor().equals(author)) {
+
+            throw new RuntimeException("삭제 권한 없음");
+        }
 
         // 게시글 삭제
-        // 根据 id 删除帖子
+        // 删除帖子
         boardRepository.deleteById(id);
     }
 }

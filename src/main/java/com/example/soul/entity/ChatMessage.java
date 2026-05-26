@@ -26,6 +26,12 @@ public class ChatMessage {
     @Column(name = "created_at") // 创建时间
     private LocalDateTime createdAt;
 
+
+
+    // 发送者类型（USER / AI / SYSTEM）
+    @Column(name = "sender_type")
+    private String senderType;
+
     @PrePersist // 保存前自动执行
     public void prePersist() {
         this.createdAt = LocalDateTime.now(); // 设置当前时间
@@ -52,5 +58,10 @@ public class ChatMessage {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+
+    public void setSenderType(String senderType) {
+        this.senderType = senderType;
     }
 }

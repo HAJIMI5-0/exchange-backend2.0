@@ -1,5 +1,6 @@
 package com.example.soul.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,25 +9,97 @@ import jakarta.persistence.Id;
 @Entity
 public class User {
 
+    // 用户ID（主键）
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 用户账号
     private String username;
+
+    // 用户密码
     private String password;
+
+    // 手机号
     private String phone;
+
+    // 昵称 / 姓名
     private String name;
+
+    // 邮箱
     private String email;
+
+    // 地址
     private String address;
+
+    // 用户头像
     private String avatar;
+
+    // 性别
     private String gender;
+
+    // 年龄
     private Integer age;
+
+    // 擅长技能
     private String skillOffer;
+
+    // 想学习技能
     private String skillWant;
+
+    // 国籍
     private String nationality;
+
+    // 学习时间段
+    // 例如：weekday_morning
+    private String timeSlot;
+
+    // 学习等级
+    // beginner / intermediate / advanced
+    private String learnLevel;
+
+    // 项目 / 奖项 / 证书
+    @Column(columnDefinition = "TEXT")
+    private String projectAwards;
+
+    // 擅长技能等级
+    private String skillOfferLevel;
+
+    // 想学习技能等级
+    private String skillWantLevel;
+
+    // 可交流时间
+    private String availableTime;
+
+    // 是否有项目经验
+    private Boolean hasProject;
+
+    // 项目详情
+    @Column(columnDefinition = "TEXT")
+    private String projectDetail;
+
+    // 是否有获奖经历
+    private Boolean hasAward;
+
+    // 获奖详情
+    @Column(columnDefinition = "TEXT")
+    private String awardDetail;
+
+    // 主题模式
+    private String themeMode;
+
+    // 背景风格
+    private String backgroundStyle;
+
+    // 字体大小
+    private String fontSize;
 
     public User() {
     }
+
+    // =========================
+    // Getter / Setter
+    // =========================
 
     public Long getId() {
         return id;
@@ -120,7 +193,117 @@ public class User {
         this.skillWant = skillWant;
     }
 
-    public String getNationality() {return nationality;}
+    public String getNationality() {
+        return nationality;
+    }
 
-    public void setNationality(String nationality) {this.nationality = nationality;}
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    // 学习时间段
+    public String getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void setTimeSlot(String timeSlot) {
+        this.timeSlot = timeSlot;
+    }
+
+    // 学习等级
+    public String getLearnLevel() {
+        return learnLevel;
+    }
+
+    public void setLearnLevel(String learnLevel) {
+        this.learnLevel = learnLevel;
+    }
+
+    public String getProjectAwards() {
+        return projectAwards;
+    }
+
+    public void setProjectAwards(String projectAwards) {
+        this.projectAwards = projectAwards;
+    }
+
+    public String getSkillOfferLevel() {
+        return skillOfferLevel;
+    }
+
+    public void setSkillOfferLevel(String skillOfferLevel) {
+        this.skillOfferLevel = skillOfferLevel;
+    }
+
+    public String getSkillWantLevel() {
+        return skillWantLevel;
+    }
+
+    public void setSkillWantLevel(String skillWantLevel) {
+        this.skillWantLevel = skillWantLevel;
+    }
+
+    public String getAvailableTime() {
+        return availableTime;
+    }
+
+    public void setAvailableTime(String availableTime) {
+        this.availableTime = availableTime;
+    }
+
+    public Boolean getHasProject() {
+        return hasProject;
+    }
+
+    public void setHasProject(Boolean hasProject) {
+        this.hasProject = hasProject;
+    }
+
+    public String getProjectDetail() {
+        return projectDetail;
+    }
+
+    public void setProjectDetail(String projectDetail) {
+        this.projectDetail = projectDetail;
+    }
+
+    public Boolean getHasAward() {
+        return hasAward;
+    }
+
+    public void setHasAward(Boolean hasAward) {
+        this.hasAward = hasAward;
+    }
+
+    public String getAwardDetail() {
+        return awardDetail;
+    }
+
+    public void setAwardDetail(String awardDetail) {
+        this.awardDetail = awardDetail;
+    }
+
+    public String getThemeMode() {
+        return themeMode;
+    }
+
+    public void setThemeMode(String themeMode) {
+        this.themeMode = themeMode;
+    }
+
+    public String getBackgroundStyle() {
+        return backgroundStyle;
+    }
+
+    public void setBackgroundStyle(String backgroundStyle) {
+        this.backgroundStyle = backgroundStyle;
+    }
+
+    public String getFontSize() {
+        return fontSize;
+    }
+
+    public void setFontSize(String fontSize) {
+        this.fontSize = fontSize;
+    }
 }

@@ -7,109 +7,146 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 // REST API 컨트롤러
+// REST API 控制器
 @RestController
 
 // 기본 주소 설정
+// 基础请求地址
 // localhost:8080/api/board
 @RequestMapping("/api/board")
 
 // React 연결 허용
-@CrossOrigin(origins = "*")
+// 允许 React 前端跨域访问
+@CrossOrigin(
+        origins = "*",
+        allowedHeaders = "*",
+        methods = {
+                RequestMethod.GET,
+                RequestMethod.POST,
+                RequestMethod.PUT,
+                RequestMethod.DELETE,
+                RequestMethod.OPTIONS
+        }
+)
+
 public class BoardController {
 
     // Service 연결
+    // 连接 BoardService
     private final BoardService boardService;
 
     // 생성자 주입
+    // 构造函数注入
     public BoardController(BoardService boardService) {
         this.boardService = boardService;
     }
 
     // =========================
-    // 全部帖子查询接口
+    // 전체 게시글 조회
+    // 查询全部帖子
     // GET /api/board
     // =========================
     @GetMapping
     public List<Board> getBoards() {
 
         // 모든 게시글 반환
+        // 返回所有帖子
         return boardService.getBoards();
     }
 
     // =========================
-    // 创建帖子接口
+    // 게시글 작성
+    // 创建帖子
     // POST /api/board
     // =========================
     @PostMapping
     public Board createBoard(
 
             // React JSON 데이터 받기
+            // 接收 React 发送的 JSON 数据
             @RequestBody Board board
     ) {
 
         // 게시글 저장
+        // 保存帖子
         return boardService.saveBoard(board);
     }
 
     // =========================
-    // 帖子详情查询接口
-    //GET /api/board/1
-    //点击帖子后显示详情弹窗
+    // 게시글 상세 조회
+    // 查询帖子详情
+    // GET /api/board/1
     // =========================
     @GetMapping("/{id}")
     public Board getBoard(
 
             // URL의 id 값 받기
+            // 获取 URL 中的 id
             @PathVariable Long id
     ) {
 
         // 게시글 하나 조회
+        // 查询单个帖子
         return boardService.getBoard(id);
     }
 
     // =========================
-    // 分类帖子查询接口
+    // 카테고리별 게시글 조회
+    // 根据分类查询帖子
     // GET /api/board/category/질문게시판
-    //点击页面顶部分类按钮时使用
     // =========================
     @GetMapping("/category/{category}")
     public List<Board> getCategoryBoards(
 
             // URL category 값 받기
+            // 获取 URL 中的 category
             @PathVariable String category
     ) {
 
         // category별 조회
+        // 根据分类查询
         return boardService.getByCategory(category);
     }
 
     // =========================
-    // 帖子搜索接口
+    // 게시글 검색
+    // 搜索帖子
     // GET /api/board/search?keyword=spring
-    //页面搜索框功能
     // =========================
     @GetMapping("/search")
     public List<Board> searchBoards(
 
             // keyword 파라미터 받기
+            // 获取 keyword 参数
             @RequestParam String keyword
     ) {
 
         // 제목 검색
+        // 根据标题搜索
         return boardService.search(keyword);
     }
 
     // =========================
-    // 删除
-    // DELETE /api/board/1
+    // 게시글 삭제
+    // 删除帖子
+    // DELETE /api/board/1?author=홍길동
+    // 작성자 이름이 일치해야 삭제 가능
+    // 作者名字一致时才允许删除
     // =========================
     @DeleteMapping("/{id}")
     public void deleteBoard(
 
-            @PathVariable Long id
+            // URL의 id 값 받기
+            // 获取 URL 中的 id
+            @PathVariable Long id,
+
+            // 작성자 이름 받기
+            // 获取作者名字
+            @RequestParam String author
     ) {
 
         // 게시글 삭제
-        boardService.deleteBoard(id);
+        // 删除帖子
+        boardService.deleteBoard(id, author);
     }
 }

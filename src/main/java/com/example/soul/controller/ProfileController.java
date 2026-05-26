@@ -6,67 +6,73 @@ import com.example.soul.entity.User;
 import com.example.soul.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * 사용자 프로필 API
  * 用户个人资料接口
- * 提供用户信息查询与修改功能
  */
 @RestController
 @RequestMapping("/api")
 public class ProfileController {
 
+    // 用户数据库连接
     private final UserRepository userRepository;
 
+    // 构造函数注入
     public ProfileController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     /**
-     * 查询用户个人资料
-     *
-     * @param username 用户名
-     * @return 用户资料信息
+     * 按 userId 查询个人资料
+     * GET /api/members/{userId}
      */
-    @GetMapping("/profile")
-    public ResponseEntity<?> getProfile(@RequestParam String username) {
-        return userRepository.findByUsername(username)
-                .<ResponseEntity<?>>map(user -> ResponseEntity.ok(toProfile(user)))
+    @GetMapping("/members/{userId}")
+    public ResponseEntity<?> getMemberProfile(
+            @PathVariable Long userId
+    ) {
+
+        return userRepository.findById(userId)
+                .<ResponseEntity<?>>map(user ->
+                        ResponseEntity.ok(toProfile(user)))
                 .orElseGet(() ->
                         ResponseEntity.status(HttpStatus.NOT_FOUND)
                                 .body(message("User not found")));
     }
 
     /**
-     * 更新用户个人资料
-     *
-     * @param request 前端传入的用户资料
-     * @return 更新后的用户资料
+     * 按 userId 修改个人资料
+     * PUT /api/members/{userId}
      */
-    @PutMapping("/profile")
-    public ResponseEntity<?> updateProfile(@RequestBody ProfileUpdateRequest request) {
+    @PutMapping("/members/{userId}")
+    public ResponseEntity<?> updateMemberProfile(
+            @PathVariable Long userId,
+            @RequestBody ProfileUpdateRequest request
+    ) {
 
-        String username = request.getUsername();
-
-        if (username == null || username.trim().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(message("username is required"));
-        }
-
-        User user = userRepository.findByUsername(username.trim()).orElse(null);
+        User user = userRepository.findById(userId)
+                .orElse(null);
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(message("User not found"));
         }
+
+        updateUserFromRequest(user, request);
+
+        User saved = userRepository.save(user);
+
+        return ResponseEntity.ok(toProfile(saved));
+    }
+
+    /**
+     * 把前端传来的资料保存到 User 实体
+     */
+    private void updateUserFromRequest(User user, ProfileUpdateRequest request) {
 
         user.setName(trimToNull(request.getName()));
         user.setPhone(trimToNull(request.getPhone()));
@@ -77,42 +83,73 @@ public class ProfileController {
         user.setAge(parseNullableInt(request.getAge()));
         user.setNationality(trimToNull(request.getNationality()));
 
-        // Frontend uses teachSkill/learnSkill
-        // backend entity stores them as skillOffer/skillWant
+        // 前端字段
+        // teachSkill / learnSkill
+        // 数据库字段
+        // skillOffer / skillWant
         user.setSkillOffer(trimToNull(request.getTeachSkill()));
         user.setSkillWant(trimToNull(request.getLearnSkill()));
 
-        User saved = userRepository.save(user);
+        // 学习时间段
+        user.setTimeSlot(trimToNull(request.getTimeSlot()));
 
-        return ResponseEntity.ok(toProfile(saved));
+        // 项目 / 奖项 / 证书
+        user.setProjectAwards(trimToNull(request.getProjectAwards()));
+
+        // 想学习的等级
+        user.setSkillWantLevel(trimToNull(request.getLearnLevel()));
     }
 
+    /**
+     * User 转 ProfileResponse
+     */
     private ProfileResponse toProfile(User user) {
 
-        return new ProfileResponse(
-                user.getUsername(),
-                user.getName(),
-                user.getPhone(),
-                user.getEmail(),
-                user.getAddress(),
-                user.getAvatar(),
-                user.getGender(),
-                user.getAge(),
-                user.getSkillOffer(),
-                user.getNationality(),
-                user.getSkillWant()
-        );
+        ProfileResponse response = new ProfileResponse();
+
+        response.setUsername(user.getUsername());
+        response.setName(user.getName());
+        response.setPhone(user.getPhone());
+        response.setEmail(user.getEmail());
+        response.setAddress(user.getAddress());
+        response.setAvatar(user.getAvatar());
+        response.setGender(user.getGender());
+        response.setAge(user.getAge());
+
+        // 技能
+        response.setTeachSkill(user.getSkillOffer());
+        response.setLearnSkill(user.getSkillWant());
+
+        // 国籍
+        response.setNationality(user.getNationality());
+
+        // 学习时间段
+        response.setTimeSlot(user.getTimeSlot());
+
+        // 项目 / 奖项 / 证书
+        response.setProjectAwards(user.getProjectAwards());
+
+        // 想学习的等级
+        response.setLearnLevel(user.getSkillWantLevel());
+
+        return response;
     }
-//返回错误信息
+
+    /**
+     * 返回错误信息
+     */
     private Map<String, Object> message(String msg) {
 
         Map<String, Object> res = new LinkedHashMap<>();
+
         res.put("message", msg);
 
         return res;
     }
 
-    //清理数据库空格字符串
+    /**
+     * 清理字符串空格
+     */
     private String trimToNull(String value) {
 
         if (value == null) {
@@ -124,7 +161,9 @@ public class ProfileController {
         return trimmed.isEmpty() ? null : trimmed;
     }
 
-    //字符串年龄转换成数字
+    /**
+     * 字符串年龄转数字
+     */
     private Integer parseNullableInt(String value) {
 
         String trimmed = trimToNull(value);
