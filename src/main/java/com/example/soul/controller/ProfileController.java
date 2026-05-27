@@ -28,33 +28,51 @@ public class ProfileController {
     }
 
     /**
-     * 按 userId 查询个人资料
-     * GET /api/members/{userId}
+     * 按 username 查询个人资料
+     * GET /api/profile?username=gxc
      */
-    @GetMapping("/members/{userId}")
-    public ResponseEntity<?> getMemberProfile(
-            @PathVariable Long userId
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile(
+
+            @RequestParam String username
     ) {
 
-        return userRepository.findById(userId)
-                .<ResponseEntity<?>>map(user ->
-                        ResponseEntity.ok(toProfile(user)))
-                .orElseGet(() ->
-                        ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .body(message("User not found")));
+        User user = userRepository
+                .findByUsername(username)
+                .orElse(null);
+
+        if (user == null) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(message("User not found"));
+        }
+
+        return ResponseEntity.ok(
+                toProfile(user)
+        );
     }
 
     /**
-     * 按 userId 修改个人资料
-     * PUT /api/members/{userId}
+     * 按 username 修改个人资料
+     * PUT /api/profile?username=gxc
      */
-    @PutMapping("/members/{userId}")
-    public ResponseEntity<?> updateMemberProfile(
-            @PathVariable Long userId,
+    /**
+     * 按 username 修改个人资料
+     * PUT /api/profile
+     */
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(
             @RequestBody ProfileUpdateRequest request
     ) {
+        String username = trimToNull(request.getUsername());
 
-        User user = userRepository.findById(userId)
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(message("Username is required"));
+        }
+
+        User user = userRepository
+                .findByUsername(username)
                 .orElse(null);
 
         if (user == null) {
@@ -72,7 +90,10 @@ public class ProfileController {
     /**
      * 把前端传来的资料保存到 User 实体
      */
-    private void updateUserFromRequest(User user, ProfileUpdateRequest request) {
+    private void updateUserFromRequest(
+            User user,
+            ProfileUpdateRequest request
+    ) {
 
         user.setName(trimToNull(request.getName()));
         user.setPhone(trimToNull(request.getPhone()));
@@ -87,17 +108,28 @@ public class ProfileController {
         // teachSkill / learnSkill
         // 数据库字段
         // skillOffer / skillWant
-        user.setSkillOffer(trimToNull(request.getTeachSkill()));
-        user.setSkillWant(trimToNull(request.getLearnSkill()));
+        user.setSkillOffer(
+                trimToNull(request.getTeachSkill())
+        );
+
+        user.setSkillWant(
+                trimToNull(request.getLearnSkill())
+        );
 
         // 学习时间段
-        user.setTimeSlot(trimToNull(request.getTimeSlot()));
+        user.setTimeSlot(
+                trimToNull(request.getTimeSlot())
+        );
 
         // 项目 / 奖项 / 证书
-        user.setProjectAwards(trimToNull(request.getProjectAwards()));
+        user.setProjectAwards(
+                trimToNull(request.getProjectAwards())
+        );
 
         // 想学习的等级
-        user.setSkillWantLevel(trimToNull(request.getLearnLevel()));
+        user.setSkillWantLevel(
+                trimToNull(request.getLearnLevel())
+        );
     }
 
     /**
@@ -105,7 +137,8 @@ public class ProfileController {
      */
     private ProfileResponse toProfile(User user) {
 
-        ProfileResponse response = new ProfileResponse();
+        ProfileResponse response =
+                new ProfileResponse();
 
         response.setUsername(user.getUsername());
         response.setName(user.getName());
@@ -117,20 +150,33 @@ public class ProfileController {
         response.setAge(user.getAge());
 
         // 技能
-        response.setTeachSkill(user.getSkillOffer());
-        response.setLearnSkill(user.getSkillWant());
+        response.setTeachSkill(
+                user.getSkillOffer()
+        );
+
+        response.setLearnSkill(
+                user.getSkillWant()
+        );
 
         // 国籍
-        response.setNationality(user.getNationality());
+        response.setNationality(
+                user.getNationality()
+        );
 
         // 学习时间段
-        response.setTimeSlot(user.getTimeSlot());
+        response.setTimeSlot(
+                user.getTimeSlot()
+        );
 
         // 项目 / 奖项 / 证书
-        response.setProjectAwards(user.getProjectAwards());
+        response.setProjectAwards(
+                user.getProjectAwards()
+        );
 
         // 想学习的等级
-        response.setLearnLevel(user.getSkillWantLevel());
+        response.setLearnLevel(
+                user.getSkillWantLevel()
+        );
 
         return response;
     }
@@ -140,7 +186,8 @@ public class ProfileController {
      */
     private Map<String, Object> message(String msg) {
 
-        Map<String, Object> res = new LinkedHashMap<>();
+        Map<String, Object> res =
+                new LinkedHashMap<>();
 
         res.put("message", msg);
 
@@ -158,23 +205,31 @@ public class ProfileController {
 
         String trimmed = value.trim();
 
-        return trimmed.isEmpty() ? null : trimmed;
+        return trimmed.isEmpty()
+                ? null
+                : trimmed;
     }
 
     /**
      * 字符串年龄转数字
      */
-    private Integer parseNullableInt(String value) {
+    private Integer parseNullableInt(
+            String value
+    ) {
 
-        String trimmed = trimToNull(value);
+        String trimmed =
+                trimToNull(value);
 
         if (trimmed == null) {
             return null;
         }
 
         try {
+
             return Integer.parseInt(trimmed);
+
         } catch (NumberFormatException e) {
+
             return null;
         }
     }

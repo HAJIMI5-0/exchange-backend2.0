@@ -15,8 +15,8 @@ public class User {
     private Long id;
 
     // 用户账号
+    @Column(nullable = false, unique = true)
     private String username;
-
     // 用户密码
     private String password;
 

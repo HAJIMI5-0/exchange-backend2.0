@@ -79,7 +79,10 @@ public class CommentController {
         // 设置帖子ID
         comment.setBoardId(boardId);
 
-        // 设置作者
+        // 设置用户名（登录账号）
+        comment.setUsername(request.getUsername());
+
+        // 设置显示名称
         comment.setAuthor(request.getAuthor());
 
         // 设置评论内容
@@ -95,7 +98,7 @@ public class CommentController {
     /**
      * 删除评论
      *
-     * DELETE /api/comments/1?username=xxx
+     * DELETE /api/comments/1?username=gxc
      */
     @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(
@@ -131,7 +134,7 @@ public class CommentController {
 
         // 是否本人
         boolean isAuthor =
-                username.equals(comment.getAuthor());
+                username.equals(comment.getUsername());
 
         // 是否管理员
         boolean isAdmin =

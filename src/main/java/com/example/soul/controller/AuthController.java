@@ -37,6 +37,7 @@ public class AuthController {
 
         if (user != null && password != null && password.equals(user.getPassword())) {
             result.put("success", true);
+            result.put("name", user.getName());
             result.put("username", user.getUsername());
             result.put("message", "Login successful");
             log.info("Login success for username={}", username);

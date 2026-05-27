@@ -129,9 +129,9 @@ public class BoardController {
     // =========================
     // 게시글 삭제
     // 删除帖子
-    // DELETE /api/board/1?author=홍길동
-    // 작성자 이름이 일치해야 삭제 가능
-    // 作者名字一致时才允许删除
+    // DELETE /api/board/1?username=gxc
+    // username 일치해야 삭제 가능
+    // username 一致时才允许删除
     // =========================
     @DeleteMapping("/{id}")
     public void deleteBoard(
@@ -140,13 +140,13 @@ public class BoardController {
             // 获取 URL 中的 id
             @PathVariable Long id,
 
-            // 작성자 이름 받기
-            // 获取作者名字
-            @RequestParam String author
+            // username 받기
+            // 获取 username
+            @RequestParam String username
     ) {
 
         // 게시글 삭제
         // 删除帖子
-        boardService.deleteBoard(id, author);
+        boardService.deleteBoard(id, username);
     }
 }
