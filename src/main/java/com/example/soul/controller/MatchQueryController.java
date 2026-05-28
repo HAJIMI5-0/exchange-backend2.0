@@ -87,23 +87,19 @@ public class MatchQueryController {
 
             boolean ok = true;
 
-            // 상대방이 내가 배우고 싶은 기술을 가지고 있는지 확인
-            // 判断对方是否会我想学的技能
-            if (have != null) {
-
+            // 对方是否会我想学的技能
+            if (want != null) {
                 ok = ok && containsSkill(
                         u.getSkillOffer(),
-                        have
+                        want
                 );
             }
 
-            // 상대방이 내가 가진 기술을 배우고 싶어하는지 확인
-            // 判断对方是否想学我会的技能
-            if (want != null) {
-
+            // 对方是否想学我会的技能
+            if (have != null) {
                 ok = ok && containsSkill(
                         u.getSkillWant(),
-                        want
+                        have
                 );
             }
 
