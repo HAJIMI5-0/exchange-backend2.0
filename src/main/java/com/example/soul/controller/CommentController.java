@@ -53,9 +53,30 @@ public class CommentController {
             @PathVariable Long boardId
     ) {
 
-        // 根据帖子ID查询评论（按时间排序）
-        return commentRepository
-                .findByBoardIdOrderByCreatedAtAsc(boardId);
+        // 查询评论
+        List<Comment> comments =
+                commentRepository
+                        .findByBoardIdOrderByCreatedAtAsc(boardId);
+
+        // 给每条评论补充用户信息
+        for (Comment comment : comments) {
+
+            User user =
+                    userRepository
+                            .findByUsername(comment.getUsername())
+                            .orElse(null);
+
+            if (user != null) {
+
+                // 显示名称
+                comment.setName(user.getName());
+
+                // 用户头像
+                comment.setAvatar(user.getAvatar());
+            }
+        }
+
+        return comments;
     }
 
     /**
@@ -92,7 +113,24 @@ public class CommentController {
         comment.setCreatedAt(LocalDateTime.now());
 
         // 保存数据库
-        return commentRepository.save(comment);
+        Comment savedComment =
+                commentRepository.save(comment);
+
+        // 查询用户信息
+        User user =
+                userRepository
+                        .findByUsername(savedComment.getUsername())
+                        .orElse(null);
+
+        // 返回 name + avatar
+        if (user != null) {
+
+            savedComment.setName(user.getName());
+
+            savedComment.setAvatar(user.getAvatar());
+        }
+
+        return savedComment;
     }
 
     /**

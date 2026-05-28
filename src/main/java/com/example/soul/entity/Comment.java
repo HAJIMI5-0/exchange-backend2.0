@@ -1,10 +1,6 @@
 package com.example.soul.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -34,8 +30,7 @@ public class Comment {
     private String username;
 
     // =========================
-    // 显示名称（昵称）
-    // author = 小聪
+    // 显示名称（旧字段）
     // =========================
     private String author;
 
@@ -49,6 +44,18 @@ public class Comment {
     // 评论时间
     // =========================
     private LocalDateTime createdAt;
+
+    // =========================
+    // 用户真实名称（不存数据库）
+    // =========================
+    @Transient
+    private String name;
+
+    // =========================
+    // 用户头像（不存数据库）
+    // =========================
+    @Transient
+    private String avatar;
 
     // =========================
     // 默认构造函数
@@ -103,14 +110,14 @@ public class Comment {
     }
 
     /**
-     * 获取显示名称
+     * 获取旧显示名称
      */
     public String getAuthor() {
         return author;
     }
 
     /**
-     * 设置显示名称
+     * 设置旧显示名称
      */
     public void setAuthor(String author) {
         this.author = author;
@@ -142,5 +149,33 @@ public class Comment {
      */
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    /**
+     * 获取真实名称
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 设置真实名称
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 获取头像
+     */
+    public String getAvatar() {
+        return avatar;
+    }
+
+    /**
+     * 设置头像
+     */
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

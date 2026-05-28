@@ -21,7 +21,26 @@ public class BoardService {
     }
 
     public List<Board> getBoards() {
-        return boardRepository.findAll();
+
+        List<Board> boards =
+                boardRepository.findAll();
+
+        for (Board board : boards) {
+
+            User user =
+                    userRepository
+                            .findByUsername(board.getUsername())
+                            .orElse(null);
+
+            if (user != null) {
+
+                board.setName(user.getName());
+
+                board.setAvatar(user.getAvatar());
+            }
+        }
+
+        return boards;
     }
 
     public Board saveBoard(Board board) {
@@ -29,8 +48,28 @@ public class BoardService {
     }
 
     public Board getBoard(Long id) {
-        return boardRepository.findById(id)
-                .orElse(null);
+
+        Board board =
+                boardRepository.findById(id)
+                        .orElse(null);
+
+        if (board == null) {
+            return null;
+        }
+
+        User user =
+                userRepository
+                        .findByUsername(board.getUsername())
+                        .orElse(null);
+
+        if (user != null) {
+
+            board.setName(user.getName());
+
+            board.setAvatar(user.getAvatar());
+        }
+
+        return board;
     }
 
     public List<Board> getByCategory(String category) {
@@ -42,7 +81,7 @@ public class BoardService {
     }
 
     // =========================
-    // ⭐最终修复版删除逻辑
+    // 删除逻辑（已统一 username）
     // =========================
     public void deleteBoard(Long id, String username) {
 
@@ -60,13 +99,12 @@ public class BoardService {
             throw new RuntimeException("사용자 없음");
         }
 
-        // ✔ 修复点1：防止 null + 空格问题
         String role = user.getRole() == null ? "" : user.getRole().trim();
 
-        boolean isAuthor = username.equals(board.getAuthor());
+        // ✔ 关键修复：统一字段
+        boolean isAuthor = username.equals(board.getUsername());
         boolean isAdmin = "ADMIN".equalsIgnoreCase(role);
 
-        // ✔ 修复点2：统一权限逻辑
         if (!isAuthor && !isAdmin) {
             throw new RuntimeException("삭제 권한 없음");
         }
